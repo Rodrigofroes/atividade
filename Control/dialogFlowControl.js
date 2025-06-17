@@ -1,5 +1,5 @@
 import ChamadoDAO from "../DAO/chamadoDAO.js";
-import ServicoDAO from "../DAO/ServicoDAO.js";
+import ServicoDAO from "../DAO/servicoDAO.js";
 
 export default class DialogFlowControl {
     constructor() {
