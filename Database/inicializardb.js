@@ -10,10 +10,10 @@ async function inicializarDados() {
         const servicosCount = await Servico.count();
         if (servicosCount === 0) {
             await Servico.bulkCreate([
-                { nome: 'Impressora', prazo: 360 }, 
-                { nome: 'Email', prazo: 120 },
-                { nome: 'ERP', prazo: 60 },
-                { nome: 'Acesso à internet', prazo: 30 }
+                { nome: 'impressora', prazo: 360 }, 
+                { nome: 'email', prazo: 120 },
+                { nome: 'ero', prazo: 60 },
+                { nome: 'acesso à internet', prazo: 30 }
             ]);
             console.log('✅ Serviços inicializados com sucesso!');
         }
