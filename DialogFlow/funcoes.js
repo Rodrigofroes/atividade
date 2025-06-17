@@ -1,4 +1,4 @@
-import ChamadoDAO from "../DAO/chamdoDAO.js";
+import ChamadoDAO from "../DAO/chamadoDAO.js";
 
 
 export function criarMessengerCard() {
