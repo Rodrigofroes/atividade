@@ -55,7 +55,7 @@ export default class DialogFlowControl {
 
         this.chamadosTemp[sessionId].servicos.push(servico);
 
-        const prazo = servicoExistente.prazo || "Prazo a definir";
+        const prazo = this.formatarPrazoEmHoras(servicoExistente.prazo) || "Prazo a definir";
         const respostaDF = {
             fulfillmentMessages: [{
                 text: { text: [`Entendido, o prazo para atendimento do serviço '${servico}' é de até ${prazo}. Deseja solicitar suporte a mais algum serviço?`] }
@@ -182,6 +182,21 @@ export default class DialogFlowControl {
         const tecnicos = ["Janaina Esteves", "Carlos Souza", "Mariana Lima", "João Pereira"];
         const index = Math.floor(Math.random() * tecnicos.length);
         return tecnicos[index];
+    }
+
+    formatarPrazoEmHoras(minutos) {
+        if (minutos >= 60) {
+            const horas = Math.floor(minutos / 60);
+            const minutosRestantes = minutos % 60;
+
+            if (minutosRestantes > 0) {
+                return `${horas} horas e ${minutosRestantes} minutos`;
+            } else {
+                return `${horas} horas`;
+            }
+        } else {
+            return `${minutos} minutos`;
+        }
     }
 
     respostaErro(res, msg = "Ocorreu um erro ao processar sua solicitação. Por favor, tente novamente mais tarde.") {
