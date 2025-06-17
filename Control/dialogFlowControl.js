@@ -39,10 +39,10 @@ export default class DialogFlowControl {
     async identificarServico(dados, res, sessionId) {
         const servico = dados.queryResult.parameters.servico;
         const prazos = {
-            "Impressora": "6 horas",
-            "Email": "2 horas",
-            "ERP": "1 hora",
-            "Internet": "30 minutos"
+            "impressora": "6 horas",
+            "email": "2 horas",
+            "erp": "1 hora",
+            "internet": "30 minutos"
         };
 
         console.log(`Serviço solicitado: ${servico}`);
