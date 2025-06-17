@@ -45,6 +45,8 @@ export default class DialogFlowControl {
             "Internet": "30 minutos"
         };
 
+        console.log(`Serviço solicitado: ${servico}`);
+
         if (!this.chamadosTemp[sessionId]) {
             this.chamadosTemp[sessionId] = { servicos: [] };
         }
