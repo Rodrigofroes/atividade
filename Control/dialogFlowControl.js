@@ -1,4 +1,5 @@
 import ChamadoDAO from "../DAO/chamadoDAO.js";
+import ServicoDAO from "../DAO/ServicoDAO.js";
 
 export default class DialogFlowControl {
     constructor() {
@@ -38,12 +39,13 @@ export default class DialogFlowControl {
 
     async identificarServico(dados, res, sessionId) {
         const servico = dados.queryResult.parameters.servico;
-        const prazos = {
-            "impressora": "6 horas",
-            "email": "2 horas",
-            "erp": "1 hora",
-            "internet": "30 minutos"
-        };
+
+        const servicoDAO = new ServicoDAO();
+        const servicoExistente = await servicoDAO.buscarPorNome(servico);
+
+        if (!servicoExistente) {
+            return this.respostaErro(res, `O serviço '${servico}' não está cadastrado. Por favor, verifique o nome e tente novamente.`);
+        }
 
         console.log(`Serviço solicitado: ${servico}`);
 
@@ -53,7 +55,7 @@ export default class DialogFlowControl {
 
         this.chamadosTemp[sessionId].servicos.push(servico);
 
-        const prazo = prazos[servico] || "Prazo a definir";
+        const prazo = servicoExistente.prazo || "Prazo a definir";
         const respostaDF = {
             fulfillmentMessages: [{
                 text: { text: [`Entendido, o prazo para atendimento do serviço '${servico}' é de até ${prazo}. Deseja solicitar suporte a mais algum serviço?`] }
