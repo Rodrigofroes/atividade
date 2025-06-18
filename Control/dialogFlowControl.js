@@ -98,7 +98,7 @@ export default class DialogFlowControl {
             usuario_matricula: params.matricula,
             usuario_endereco: params.endereco,
             usuario_telefone: params.telefone,
-            tecnico: tecnicoAleatorio.id,
+            tecnico_id: tecnicoAleatorio.id,
             numero: Math.floor(Math.random() * 1000000),
             status: "Aberto"
         });
