@@ -89,7 +89,7 @@ export default class DialogFlowControl {
             return this.respostaErro(res, "Nenhum serviço foi identificado antes de coletar os dados do usuário.");
         }
 
-        const tecnicoAletorio = this.selecionarTecnicoAleatorio();
+        const tecnicoAleatorio = await this.selecionarTecnicoAleatorio();
 
         console.log(this.chamadosTemp[sessionId] = {
             ...this.chamadosTemp[sessionId],
@@ -97,7 +97,7 @@ export default class DialogFlowControl {
             usuario_matricula: params.matricula,
             usuario_endereco: params.endereco,
             usuario_telefone: params.telefone,
-            tecnico: tecnicoAletorio.id,
+            tecnico: tecnicoAleatorio.id,
             numero: Math.floor(Math.random() * 1000000),
             status: "Aberto"
         });
@@ -112,7 +112,7 @@ export default class DialogFlowControl {
                 fulfillmentMessages: [{
                     text: {
                         text: [
-                            `Entendido ${chamado.usuario_nome}. Seu chamado foi registrado com o número ${chamado.numero}. O técnico responsável será ${tecnicoAletorio.nome}.`
+                            `Entendido ${chamado.usuario_nome}. Seu chamado foi registrado com o número ${chamado.numero}. O técnico responsável será ${tecnicoAleatorio.nome}.`
                         ]
                     }
                 }]
