@@ -136,17 +136,22 @@ export default class DialogFlowControl {
 
             const chamadoDAO = new ChamadoDAO();
             const chamado = await chamadoDAO.obterChamadoPorNumero(numero);
-            console.log(`Buscando chamado número: ${chamado}`);
+
             if (chamado) {
+                console.log("Chamado localizado:", chamado.toJSON());
+
+                const nomeTecnico = chamado.tecnico || "Não definido";
+
                 const respostaDF = {
                     fulfillmentMessages: [{
                         text: {
                             text: [
-                                `Chamado localizado.\nNúmero: ${chamado.numero}\nTécnico responsável: ${chamado.tecnico}\nStatus atual: ${chamado.status}.`
+                                `Chamado localizado.\nNúmero: ${chamado.numero}\nTécnico responsável: ${nomeTecnico}\nStatus atual: ${chamado.status}.`
                             ]
                         }
                     }]
                 };
+
                 res.status(200).json(respostaDF);
             } else {
                 this.respostaErro(res, `Chamado número ${numero} não encontrado.`);
