@@ -12,7 +12,7 @@ async function inicializarDados() {
             await Servico.bulkCreate([
                 { nome: 'impressora', prazo: 360 }, 
                 { nome: 'email', prazo: 120 },
-                { nome: 'ero', prazo: 60 },
+                { nome: 'erp', prazo: 60 },
                 { nome: 'acesso à internet', prazo: 30 }
             ]);
             console.log('✅ Serviços inicializados com sucesso!');

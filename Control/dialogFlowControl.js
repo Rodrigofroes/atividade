@@ -1,5 +1,6 @@
 import ChamadoDAO from "../DAO/chamadoDAO.js";
 import ServicoDAO from "../DAO/servicoDAO.js";
+import TecnicoDAO from "../DAO/tecnicoDAO.js";
 
 export default class DialogFlowControl {
     constructor() {
@@ -36,6 +37,7 @@ export default class DialogFlowControl {
 
     async identificarServico(dados, res, sessionId) {
         const servico = dados.queryResult.parameters.servico;
+
         const servicoDAO = new ServicoDAO();
         const servicoExistente = await servicoDAO.buscarPorNome(servico);
 
@@ -87,13 +89,15 @@ export default class DialogFlowControl {
             return this.respostaErro(res, "Nenhum serviço foi identificado antes de coletar os dados do usuário.");
         }
 
+        const tecnicoAletorio = this.selecionarTecnicoAleatorio();
+
         console.log(this.chamadosTemp[sessionId] = {
             ...this.chamadosTemp[sessionId],
             usuario_nome: params.nome?.name || params.nome,
             usuario_matricula: params.matricula,
             usuario_endereco: params.endereco,
             usuario_telefone: params.telefone,
-            tecnico: this.selecionarTecnicoAleatorio(),
+            tecnico: tecnicoAletorio.id,
             numero: Math.floor(Math.random() * 1000000),
             status: "Aberto"
         });
@@ -108,7 +112,7 @@ export default class DialogFlowControl {
                 fulfillmentMessages: [{
                     text: {
                         text: [
-                            `Entendido ${chamado.usuario_nome}. Seu chamado foi registrado com o número ${chamado.numero}. O técnico responsável será ${chamado.tecnico}.`
+                            `Entendido ${chamado.usuario_nome}. Seu chamado foi registrado com o número ${chamado.numero}. O técnico responsável será ${tecnicoAletorio.nome}.`
                         ]
                     }
                 }]
@@ -176,9 +180,13 @@ export default class DialogFlowControl {
     }
 
     selecionarTecnicoAleatorio() {
-        const tecnicos = ["Janaina Esteves", "Carlos Souza", "Mariana Lima", "João Pereira"];
-        const index = Math.floor(Math.random() * tecnicos.length);
-        return tecnicos[index];
+        const tecnicoDAO = new TecnicoDAO();
+        const tecnicos = tecnicoDAO.buscarTodos();
+        if (!tecnicos || tecnicos.length === 0) {
+            return "Nenhum técnico disponível no momento.";
+        }
+        const tecnicosNomes = tecnicos.map(t => t.nome);
+        return tecnicosNomes;
     }
 
     formatarPrazoEmHoras(minutos) {
