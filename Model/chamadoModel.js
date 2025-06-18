@@ -10,6 +10,11 @@ const Chamado = sequelize.define('Chamado', {
         primaryKey: true,
         autoIncrement: true
     },
+     numero: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        unique: true
+    },
     usuario_nome: {
         type: DataTypes.STRING,
         allowNull: false
