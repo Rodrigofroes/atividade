@@ -136,7 +136,7 @@ export default class DialogFlowControl {
 
             const chamadoDAO = new ChamadoDAO();
             const chamado = await chamadoDAO.obterChamadoPorNumero(numero);
-
+            console.log(`Buscando chamado número: ${chamado}`);
             if (chamado) {
                 const respostaDF = {
                     fulfillmentMessages: [{
