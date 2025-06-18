@@ -89,7 +89,7 @@ export default class DialogFlowControl {
 
         console.log(this.chamadosTemp[sessionId] = {
             ...this.chamadosTemp[sessionId],
-            usuario_nome: params.nome,
+            usuario_nome: params.nome?.name || params.nome,
             usuario_matricula: params.matricula,
             usuario_endereco: params.endereco,
             usuario_telefone: params.telefone,
