@@ -89,17 +89,17 @@ export default class DialogFlowControl {
 
         console.log(this.chamadosTemp[sessionId] = {
             ...this.chamadosTemp[sessionId],
-            nome: params.nome,
-            matricula: params.matricula,
-            endereco: params.endereco,
-            telefone: params.telefone,
+            usuario_nome: params.nome,
+            usuario_matricula: params.matricula,
+            usuario_endereco: params.endereco,
+            usuario_telefone: params.telefone,
             tecnico: this.selecionarTecnicoAleatorio(),
             numero: Math.floor(Math.random() * 1000000),
             status: "Aberto"
         });
 
         const chamado = this.chamadosTemp[sessionId];
-        
+        chamado.servicos = chamado.servicos.join(", ");
         try {
             const chamadoDAO = new ChamadoDAO();
             await chamadoDAO.salvar(chamado);
