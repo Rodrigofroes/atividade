@@ -87,8 +87,7 @@ export default class DialogFlowControl {
             return this.respostaErro(res, "Nenhum serviço foi identificado antes de coletar os dados do usuário.");
         }
 
-        // Preencher os dados do usuário
-        this.chamadosTemp[sessionId] = {
+        console.log(this.chamadosTemp[sessionId] = {
             ...this.chamadosTemp[sessionId],
             nome: params.nome,
             matricula: params.matricula,
@@ -97,10 +96,10 @@ export default class DialogFlowControl {
             tecnico: this.selecionarTecnicoAleatorio(),
             numero: Math.floor(Math.random() * 1000000),
             status: "Aberto"
-        };
+        });
 
         const chamado = this.chamadosTemp[sessionId];
-
+        
         try {
             const chamadoDAO = new ChamadoDAO();
             await chamadoDAO.salvar(chamado);
