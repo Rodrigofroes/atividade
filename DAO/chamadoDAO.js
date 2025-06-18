@@ -1,4 +1,5 @@
 import Chamado from "../Model/chamadoModel.js";
+import Tecnico from "../Model/tecnicoModel.js";
 
 export default class ChamadoDAO {
     async salvar(chamado) {
