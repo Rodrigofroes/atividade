@@ -187,7 +187,7 @@ export default class DialogFlowControl {
             return "Nenhum técnico disponível no momento.";
         }
         const tecnicosNomes = tecnicos.map(t => t.nome);
-        return tecnicosNomes;
+        return tecnicosNomes.dataValues;
     }
 
     formatarPrazoEmHoras(minutos) {
