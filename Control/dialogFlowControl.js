@@ -125,6 +125,15 @@ export default class DialogFlowControl {
     async buscarChamadoPorNumero(dados, res) {
         try {
             const numero = dados.queryResult.parameters.numero;
+
+            if (!numero) {
+                return res.status(200).json({
+                    fulfillmentMessages: [{
+                        text: { text: ["Por favor, informe o número do protocolo/chamado para que eu possa localizar."] }
+                    }]
+                });
+            }
+
             const chamadoDAO = new ChamadoDAO();
             const chamado = await chamadoDAO.obterChamadoPorNumero(numero);
 
