@@ -23,7 +23,7 @@ export default class DialogFlowControl {
             case "coleta_dados_usuario":
                 await this.coletarDadosUsuario(dados, res, sessionId);
                 break;
-            case "consulta_status":
+            case "CapturarNumeroChamado":
                 await this.buscarChamadoPorNumero(dados, res);
                 break;
             case "informacoes_adicionais":
