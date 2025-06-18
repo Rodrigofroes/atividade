@@ -90,7 +90,8 @@ export default class DialogFlowControl {
         }
 
         const tecnicoAleatorio = await this.selecionarTecnicoAleatorio();
-
+        console.log("Técnico selecionado:", tecnicoAleatorio);
+        
         console.log(this.chamadosTemp[sessionId] = {
             ...this.chamadosTemp[sessionId],
             usuario_nome: params.nome?.name || params.nome,
