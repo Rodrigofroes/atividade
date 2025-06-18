@@ -12,8 +12,6 @@ export default class DialogFlowControl {
         const nomeIntencao = dados.queryResult.intent.displayName;
         const sessionId = dados.session;
 
-        console.log("Intenção recebida:", nomeIntencao);
-
         switch (nomeIntencao) {
             case "identificacao_servico":
                 await this.identificarServico(dados, res, sessionId);
@@ -25,6 +23,7 @@ export default class DialogFlowControl {
                 await this.coletarDadosUsuario(dados, res, sessionId);
                 break;
             case "CapturarNumeroChamado":
+            case "consulta_status":
                 await this.buscarChamadoPorNumero(dados, res);
                 break;
             case "informacoes_adicionais":
@@ -45,7 +44,6 @@ export default class DialogFlowControl {
             return this.respostaErro(res, `O serviço '${servico}' não está cadastrado. Por favor, verifique o nome e tente novamente.`);
         }
 
-        console.log(`Serviço solicitado: ${servico}`);
 
         if (!this.chamadosTemp[sessionId]) {
             this.chamadosTemp[sessionId] = { servicos: [] };
@@ -65,7 +63,7 @@ export default class DialogFlowControl {
     async confirmarServicoAdicional(dados, res, sessionId) {
         const confirmacao = dados.queryResult.parameters.confirmacao;
 
-        if (confirmacao.toLowerCase() === "não") {
+        if (confirmacao.toLowerCase() == "não") {
             const respostaDF = {
                 fulfillmentMessages: [{
                     text: { text: ["Ok! Agora, por favor, informe seus dados pessoais (nome, matrícula, endereço e telefone) para registrar o chamado."] }
@@ -90,9 +88,8 @@ export default class DialogFlowControl {
         }
 
         const tecnicoAleatorio = await this.selecionarTecnicoAleatorio();
-        console.log("Técnico selecionado:", tecnicoAleatorio);
 
-        console.log(this.chamadosTemp[sessionId] = {
+        this.chamadosTemp[sessionId] = {
             ...this.chamadosTemp[sessionId],
             usuario_nome: params.nome?.name || params.nome,
             usuario_matricula: params.matricula,
@@ -101,7 +98,7 @@ export default class DialogFlowControl {
             tecnico_id: tecnicoAleatorio.id,
             numero: Math.floor(Math.random() * 1000000),
             status: "Aberto"
-        });
+        };
 
         const chamado = this.chamadosTemp[sessionId];
         chamado.servicos = chamado.servicos.join(", ");
@@ -143,7 +140,6 @@ export default class DialogFlowControl {
             const chamado = await chamadoDAO.obterChamadoPorNumero(numero);
 
             if (chamado) {
-                console.log("Chamado localizado:", chamado.toJSON());
 
                 const nomeTecnico = chamado.Tecnico?.nome || "Não definido";
 
