@@ -54,7 +54,11 @@ export default class ChamadoDAO {
     async obterChamadoPorNumero(numero) {
         try {
             return await Chamado.findOne({
-                where: { numero: numero }
+                where: { numero: numero },
+                include: [{
+                    model: Tecnico,
+                    attributes: ['nome'] 
+                }]
             });
         } catch (error) {
             console.log(error);

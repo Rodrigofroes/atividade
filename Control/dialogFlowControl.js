@@ -145,7 +145,7 @@ export default class DialogFlowControl {
             if (chamado) {
                 console.log("Chamado localizado:", chamado.toJSON());
 
-                const nomeTecnico = chamado.tecnico || "Não definido";
+                const nomeTecnico = chamado.Tecnico?.nome || "Não definido";
 
                 const respostaDF = {
                     fulfillmentMessages: [{
@@ -186,7 +186,6 @@ export default class DialogFlowControl {
         
         const tecnicosNomes = tecnicos.map(t => t.nome);
         const tecnicoAleatorio = tecnicos[Math.floor(Math.random() * tecnicos.length)];
-        console.log("Técnicos disponíveis:", tecnicosNomes);
         return tecnicoAleatorio.dataValues;
     }
 
