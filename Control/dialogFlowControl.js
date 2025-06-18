@@ -91,7 +91,7 @@ export default class DialogFlowControl {
 
         const tecnicoAleatorio = await this.selecionarTecnicoAleatorio();
         console.log("Técnico selecionado:", tecnicoAleatorio);
-        
+
         console.log(this.chamadosTemp[sessionId] = {
             ...this.chamadosTemp[sessionId],
             usuario_nome: params.nome?.name || params.nome,
@@ -183,12 +183,11 @@ export default class DialogFlowControl {
     async selecionarTecnicoAleatorio() {
         const tecnicoDAO = new TecnicoDAO();
         const tecnicos = await tecnicoDAO.buscarTodos();
-        console.log("Técnicos disponíveis:", tecnicos);
-        if (!tecnicos || tecnicos.length === 0) {
-            return "Nenhum técnico disponível no momento.";
-        }
+        
         const tecnicosNomes = tecnicos.map(t => t.nome);
-        return tecnicosNomes.dataValues;
+        const tecnicoAleatorio = tecnicos[Math.floor(Math.random() * tecnicos.length)];
+        console.log("Técnicos disponíveis:", tecnicosNomes);
+        return tecnicoAleatorio.dataValues;
     }
 
     formatarPrazoEmHoras(minutos) {
