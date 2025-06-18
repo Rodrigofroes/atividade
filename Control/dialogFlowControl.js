@@ -108,7 +108,7 @@ export default class DialogFlowControl {
                 fulfillmentMessages: [{
                     text: {
                         text: [
-                            `Entendido ${chamado.nome}. Seu chamado foi registrado com o número ${chamado.numero}. O técnico responsável será ${chamado.tecnico}.`
+                            `Entendido ${chamado.usuario_nome}. Seu chamado foi registrado com o número ${chamado.numero}. O técnico responsável será ${chamado.tecnico}.`
                         ]
                     }
                 }]
