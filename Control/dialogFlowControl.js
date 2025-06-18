@@ -3,13 +3,13 @@ import ServicoDAO from "../DAO/servicoDAO.js";
 
 export default class DialogFlowControl {
     constructor() {
-        this.chamadosTemp = {};  // Armazena os dados temporários do usuário antes de salvar no banco
+        this.chamadosTemp = {};  // Dados temporários por sessão
     }
 
     async DialogFlow(req, res) {
         const dados = req.body;
         const nomeIntencao = dados.queryResult.intent.displayName;
-        const sessionId = dados.session;  // Único por usuário/atendimento
+        const sessionId = dados.session;
 
         console.log("Intenção recebida:", nomeIntencao);
 
@@ -22,9 +22,6 @@ export default class DialogFlowControl {
                 break;
             case "coleta_dados_usuario":
                 await this.coletarDadosUsuario(dados, res, sessionId);
-                break;
-            case "confirmacao_chamado":
-                await this.confirmarChamado(res, sessionId);
                 break;
             case "consulta_status":
                 await this.buscarChamadoPorNumero(dados, res);
@@ -39,7 +36,6 @@ export default class DialogFlowControl {
 
     async identificarServico(dados, res, sessionId) {
         const servico = dados.queryResult.parameters.servico;
-
         const servicoDAO = new ServicoDAO();
         const servicoExistente = await servicoDAO.buscarPorNome(servico);
 
@@ -55,7 +51,7 @@ export default class DialogFlowControl {
 
         this.chamadosTemp[sessionId].servicos.push(servico);
 
-        const prazo = this.formatarPrazoEmHoras(servicoExistente.prazo) || "Prazo a definir";
+        const prazo = this.formatarPrazoEmHoras(servicoExistente.prazo);
         const respostaDF = {
             fulfillmentMessages: [{
                 text: { text: [`Entendido, o prazo para atendimento do serviço '${servico}' é de até ${prazo}. Deseja solicitar suporte a mais algum serviço?`] }
@@ -86,33 +82,26 @@ export default class DialogFlowControl {
 
     async coletarDadosUsuario(dados, res, sessionId) {
         const params = dados.queryResult.parameters;
+
+        if (!this.chamadosTemp[sessionId]) {
+            return this.respostaErro(res, "Nenhum serviço foi identificado antes de coletar os dados do usuário.");
+        }
+
+        // Preencher os dados do usuário
         this.chamadosTemp[sessionId] = {
             ...this.chamadosTemp[sessionId],
             nome: params.nome,
             matricula: params.matricula,
             endereco: params.endereco,
-            telefone: params.telefone
+            telefone: params.telefone,
+            tecnico: this.selecionarTecnicoAleatorio(),
+            numero: Math.floor(Math.random() * 1000000),
+            status: "Aberto"
         };
 
-        const respostaDF = {
-            fulfillmentMessages: [{
-                text: { text: ["Dados recebidos. Vou registrar o seu chamado agora!"] }
-            }]
-        };
-        res.status(200).json(respostaDF);
-    }
+        const chamado = this.chamadosTemp[sessionId];
 
-    async confirmarChamado(res, sessionId) {
         try {
-            const chamado = this.chamadosTemp[sessionId];
-            if (!chamado) {
-                return this.respostaErro(res, "Não localizei dados para este atendimento.");
-            }
-
-            chamado.tecnico = this.selecionarTecnicoAleatorio();
-            chamado.numero = Math.floor(Math.random() * 1000000);
-            chamado.status = "Aberto";
-
             const chamadoDAO = new ChamadoDAO();
             await chamadoDAO.salvar(chamado);
 
@@ -126,7 +115,7 @@ export default class DialogFlowControl {
                 }]
             };
 
-            delete this.chamadosTemp[sessionId];  // Limpa os dados temporários
+            delete this.chamadosTemp[sessionId];
             res.status(200).json(respostaDF);
         } catch (error) {
             console.error(error);
@@ -152,12 +141,7 @@ export default class DialogFlowControl {
                 };
                 res.status(200).json(respostaDF);
             } else {
-                const respostaDF = {
-                    fulfillmentMessages: [{
-                        text: { text: [`Chamado número ${numero} não encontrado.`] }
-                    }]
-                };
-                res.status(200).json(respostaDF);
+                this.respostaErro(res, `Chamado número ${numero} não encontrado.`);
             }
         } catch (error) {
             console.error(error);
