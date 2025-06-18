@@ -182,6 +182,7 @@ export default class DialogFlowControl {
     selecionarTecnicoAleatorio() {
         const tecnicoDAO = new TecnicoDAO();
         const tecnicos = tecnicoDAO.buscarTodos();
+        console.log("Técnicos disponíveis:", tecnicos);
         if (!tecnicos || tecnicos.length === 0) {
             return "Nenhum técnico disponível no momento.";
         }
