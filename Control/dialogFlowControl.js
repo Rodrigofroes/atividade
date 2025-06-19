@@ -4,7 +4,7 @@ import TecnicoDAO from "../DAO/tecnicoDAO.js";
 
 export default class DialogFlowControl {
     constructor() {
-        this.chamadosTemp = {};  // Dados temporários por sessão
+        this.chamadosTemp = {};
     }
 
     async DialogFlow(req, res) {
